@@ -1,29 +1,39 @@
+#docker compose file version in form of "string"
 version: "3.8"
 
 services:
   frontend:
     depends_on:
       - backend
+    # look Dockerfile in this folder inside frontend
     build: ./frontend
     ports:
+      # port mapping host->container
       - 3000:3000
 
   backend:
     depends_on:
       - db
+    # look Dockerfile in this folder inside backend
     build: ./backend
     ports:
+      # port mapping host->container
       - 3001:3001
     environment:
+      #where is mongodb database
       DB_URL: mongodb://db/vidly
     command: ./docker-entrypoint.sh
 
   db:
+    # build image on ubuntu image
     image: mongo:4.0-xenial
     ports:
+      # default port mapping host->container
       - 27017:27017
     volumes:
+      # volume mapping inside container
       - vidly: /data/db
 
+# define volume before we use it , vidly is db name
 volumes:
   vidly:
